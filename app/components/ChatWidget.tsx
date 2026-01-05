@@ -1,19 +1,27 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Bot, User } from 'lucide-react';
+import { MessageSquare, X, Send, Bot } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+
+// Kita standarkan tipe datanya agar cocok dengan API Memory
+type Message = {
+  role: 'user' | 'assistant';
+  content: string;
+};
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'bot', text: 'Halo! 👋 Saya Arvi, AI Assistant Arvistar. Ada yang bisa saya bantu jelaskan soal layanan kami?' }
+  
+  // LOGIC BARU: Pakai format 'assistant' & 'content' (Standar AI)
+  const [messages, setMessages] = useState<Message[]>([
+    { role: 'assistant', content: 'Halo! 👋 Saya Arvi, AI Assistant Arvistar. Ada yang bisa saya bantu jelaskan soal layanan kami?' }
   ]);
+  
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto scroll ke bawah
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -25,26 +33,30 @@ export default function ChatWidget() {
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    // 1. Tampilkan pesan user
-    const userMessage = input;
-    setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
+    // 1. SIAPKAN DATA: Gabungkan chat lama + chat baru (Logic Memory)
+    const newMessage: Message = { role: 'user', content: input };
+    const newHistory = [...messages, newMessage]; 
+
+    // Update UI langsung
+    setMessages(newHistory);
     setInput('');
     setIsLoading(true);
 
     try {
-      // 2. Kirim ke API yang kita buat tadi
+      // 2. KIRIM ARRAY HISTORY KE BACKEND
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({ messages: newHistory }), // Kirim full history
       });
 
       const data = await res.json();
 
-      // 3. Tampilkan balasan AI
-      setMessages(prev => [...prev, { role: 'bot', text: data.reply }]);
+      // 3. TERIMA BALASAN
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+      
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'bot', text: "Maaf, server sedang sibuk. Silakan hubungi via WhatsApp ya." }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Maaf, server sedang sibuk. Silakan hubungi via WhatsApp ya." }]);
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +67,7 @@ export default function ChatWidget() {
       {/* Chat Window */}
       {isOpen && (
         <div className="bg-white w-[350px] h-[500px] rounded-2xl shadow-2xl border border-gray-200 flex flex-col mb-4 overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
-          {/* Header */}
+          {/* Header (WARNA TETAP BLUE-900 SESUAI AWAL) */}
           <div className="bg-blue-900 p-4 flex justify-between items-center text-white">
             <div className="flex items-center gap-2">
               <div className="bg-white/20 p-1.5 rounded-full">
@@ -84,7 +96,6 @@ export default function ChatWidget() {
                       : 'bg-white text-slate-700 border border-gray-100 rounded-bl-none'
                   }`}
                 >
-                  {/* --- BAGIAN INI SUDAH DIPERBAIKI --- */}
                   <ReactMarkdown 
                     components={{
                       a: ({node, ...props}) => (
@@ -97,17 +108,17 @@ export default function ChatWidget() {
                           }`}
                         />
                       ),
-                      // Biar list bullet point rapi (kalau AI kasih poin-poin)
                       ul: ({node, ...props}) => <ul {...props} className="list-disc ml-4 space-y-1" />,
                       ol: ({node, ...props}) => <ol {...props} className="list-decimal ml-4 space-y-1" />,
+                      p: ({node, ...props}) => <p {...props} className="mb-1 last:mb-0" />
                     }}
                   >
-                    {msg.text}
+                    {msg.content}
                   </ReactMarkdown>
-                  {/* ----------------------------------- */}
                 </div>
               </div>
             ))}
+            
             {isLoading && (
               <div className="flex justify-start">
                  <div className="bg-white p-3 rounded-2xl border border-gray-100 rounded-bl-none flex gap-1">
@@ -144,7 +155,7 @@ export default function ChatWidget() {
         </div>
       )}
 
-      {/* Floating Button */}
+      {/* Floating Button (ANIMASI BOUNCE & WARNA TETAP SAMA) */}
       {!isOpen && (
         <button 
           onClick={() => setIsOpen(true)}
