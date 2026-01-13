@@ -47,7 +47,7 @@ export default function ChatWidget() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newHistory }), // Kirim full history
+        body: JSON.stringify({ messages: newHistory }), 
       });
 
       const data = await res.json();

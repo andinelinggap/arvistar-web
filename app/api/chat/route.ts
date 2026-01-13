@@ -7,8 +7,6 @@ const groq = new Groq({
 
 export async function POST(req: Request) {
   try {
-    // 1. Terima 'messages' (Array), bukan cuma 'message' (String)
-    // Ini kuncinya agar AI INGAT konteks percakapan sebelumnya.
     const { messages } = await req.json();
 
     if (!process.env.GROQ_API_KEY) {
@@ -57,12 +55,12 @@ export async function POST(req: Request) {
     // 2. Gabungkan System Prompt dengan History Chat dari Frontend
     const conversationHistory = [
       { role: "system", content: systemPrompt },
-      ...messages // Ini berisi chat lama + chat baru user
+      ...messages 
     ];
 
     const chatCompletion = await groq.chat.completions.create({
       messages: conversationHistory,
-      model: "llama-3.3-70b-versatile", // Model Llama 3.3 paling bagus buat instruksi kompleks
+      model: "llama-3.3-70b-versatile",
       temperature: 0.7,
       max_tokens: 800,
     });

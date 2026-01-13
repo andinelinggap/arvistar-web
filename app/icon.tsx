@@ -18,14 +18,14 @@ export default function Icon() {
       <div
         style={{
           fontSize: 20,
-          background: '#1d4ed8', // Ini warna blue-700 (Arvistar Blue)
+          background: '#1d4ed8', 
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           color: 'white',
-          borderRadius: '6px', // Sedikit rounded biar modern
+          borderRadius: '6px', 
           fontWeight: 900,
           fontFamily: 'sans-serif',
         }}
@@ -33,7 +33,6 @@ export default function Icon() {
         A
       </div>
     ),
-    // ImageResponse options
     {
       ...size,
     }

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// 2. Metadata (Pastikan CUMA SATU saja, pakai yang Arvistar)
+// 2. Metadata 
 export const metadata: Metadata = {
   title: "Arvistar Digitech - AI Automation Agency",
   description: "Web Development & AI Solutions",
@@ -31,10 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Render Halaman Utama */}
         {children}
-        
-        {/* 3. PASANG WIDGET DISINI (Di bawah children, sebelum tutup body) */}
         <ChatWidget />
       </body>
     </html>

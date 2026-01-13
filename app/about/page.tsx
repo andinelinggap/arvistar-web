@@ -219,38 +219,7 @@
       }
     ];
 
-    return (
-      <section className="py-24 bg-slate-50 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <span className="text-blue-700 font-bold text-xs tracking-widest uppercase mb-4 block">Tim Kami</span>
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Para Inovator di Balik Layar</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">
-              Kombinasi keahlian dalam strategi bisnis, inovasi teknologi, dan manajemen eksekusi.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {team.map((member, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
-                  <div className={`w-16 h-16 rounded-2xl ${member.bg} mb-6 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform`}>
-                    <member.icon className="w-8 h-8" />
-                  </div>
-                  <div className="text-center">
-                    <h3 className="text-xl font-bold text-slate-900">{member.name}</h3>
-                    <span className="inline-block px-3 py-1 bg-slate-50 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-500 mt-2 mb-4 border border-slate-100">
-                        {member.role}
-                    </span>
-                    <p className="text-slate-500 text-sm leading-relaxed">
-                        {member.desc}
-                    </p>
-                  </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
+    return 
   };
 
   const Footer = () => (
@@ -279,7 +248,6 @@
         <AboutHero />
         <StatsSection />
         <StorySection />
-        <TeamSection />
         <Footer />
       </main>
     );
